@@ -30,3 +30,6 @@ def set_env(key_list: List[str]) -> None:
     BASE_DIR = Path(__file__).resolve().parent.parent.parent
     config = get_secret_file(BASE_DIR)
     for key in key_list: os.environ[key] = config[key]
+
+    # ps - 해당 프로젝트 최상위 경로, base directory 기억
+    os.environ["base_dir"] = BASE_DIR
