@@ -106,7 +106,7 @@ class Crawler:
 
         # step3. 두 list에서 다른 값 가져오기 (다른 url 가져오기), 여러개일 수 있어서 list로 계속 취급
         result_diff_list = list(set(new_issue_url_list) - set(standard_data_list))
-        print(f"result_diff_list: {result_diff_list}")
+        # print(f"result_diff_list: {result_diff_list}")
 
         # step4. 다른 url을 타고 들어가서 상세 정보를 한 번 더 파싱해오기
         if len(result_diff_list) > 0:
