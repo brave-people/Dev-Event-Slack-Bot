@@ -9,7 +9,7 @@ from crawler.crawler import crawler_run
 set_env(["slack_token", "event_check_url"])
 
 # monitor
-msg_txt = crawler_run()
+msg_txt = crawler_run() # -> list[dict]
 
 # slack 
 slack = SlackAPI(debug=True)
