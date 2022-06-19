@@ -1,11 +1,11 @@
 
-# slack core
+# custom lib
+import os
 from core.slack import SlackAPI
 from core.config import set_env
 
 # 환경변수 세팅
 set_env(["slack_token", "event_check_url"])
-
 
 # monitor
 

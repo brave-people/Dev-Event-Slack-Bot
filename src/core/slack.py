@@ -24,7 +24,7 @@ class SlackAPI:
         self.__dict__.update(kwargs)
 
 
-    def get_channel_info(self) -> List(dict):
+    def get_channel_info(self) -> List[dict]:
         """
         슬랙에 해당 봇을 추가한 워크스페이스의 모든 채널 info 가져오기 
         """
