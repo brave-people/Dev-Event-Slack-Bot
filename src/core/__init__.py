@@ -1,1 +1,1 @@
-from . import config, core
+from . import config, slack
