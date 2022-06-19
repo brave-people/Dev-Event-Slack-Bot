@@ -1,30 +1,30 @@
 
 # python lib
-import ssl, certifi  # CERTIFICATE_VERIFY_FAILED error
-from pathlib import Path
+import os, ssl, certifi  # CERTIFICATE_VERIFY_FAILED error
 from slack_sdk import WebClient
 from slack_sdk.errors import SlackApiError
 
 # typing
+from typing import List, Dict
 from slack_sdk.web.slack_response import SlackResponse
-
-# extentions
-from .config import get_secret_file
 
 class SlackAPI:
     """
     슬랙 API 핸들러
     """
-    BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-    def __init__(self, **kwargs):
-        config = get_secret_file(self.BASE_DIR)  # slack API를 위한 환경 변수 값 세팅
+    def __init__(self, **kwargs) -> None:
+        """
+        slack api활용을 위한 SDK instance 생성자
+        """
         ssl_context = ssl.create_default_context(cafile=certifi.where())
-        self.client = WebClient(config['slack_token'], ssl=ssl_context)  # 슬랙 클라이언트 인스턴스 생성
-        self.__dict__.update(kwargs)  # 변동 가능성 있는 변수값 위해 kwargs 세팅
+        self.client = WebClient(os.environ.get("slack_token"), ssl=ssl_context)  # 슬랙 클라이언트 인스턴스 생성
+        
+        # 변동 가능성 있는 변수값 위해 kwargs 세팅
+        self.__dict__.update(kwargs)
 
 
-    def get_channel_info(self) -> list:
+    def get_channel_info(self) -> List(dict):
         """
         슬랙에 해당 봇을 추가한 워크스페이스의 모든 채널 info 가져오기 
         """
