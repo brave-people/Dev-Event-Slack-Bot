@@ -1,6 +1,10 @@
 
-# custom lib
+# python lib
 import os
+from time import perf_counter_ns, process_time_ns
+
+# custom lib
+from logger import log, process_start_log
 from core.slack import SlackAPI
 from core.config import set_env
 from crawler.crawler import crawler_run
@@ -26,20 +30,16 @@ def send_slack_msgs(msg_txt_list: list[dict]):
             if target_ch['is_member']: 
                 # target_ch['name'] - ch name 알 수 있음
                 slack.post_text_message(target_ch['id'], msg_dict.get("img"), msg_dict.get("msg"))
-
-
-                # 훅 보낸 뒤에 보낸 로그 파일을 csv 파일로 만들어 두자 
-
-
-
-def make_send_slack_log(ch_id, ch_name, msg):
-    '''
-    
-    '''
+                log(f"msg hooked: {target_ch['id']}, {target_ch['name']}, {msg_dict.get('msg')}")
 
 
 
 if __name__ == "__main__":
+    start_time = perf_counter_ns() # 1ns * 10^9 = 1s
+    process_start_time = process_time_ns()
+    process_name = "dev-event-slack-bot"
+    process_start_log(process_name)
+
     # 환경변수 세팅
     set_env(["slack_token", "event_check_url"])
 
@@ -51,3 +51,8 @@ if __name__ == "__main__":
     # 변동 감지된 링크가 있다면
     if len(msg_txt_list) > 0:
         send_slack_msgs(msg_txt_list)
+
+    end_time = perf_counter_ns()
+    process_end_time = process_time_ns()
+    log(f"{process_name} total run time: {end_time - start_time}")
+    log(f"{process_name} process run time: {process_end_time - process_start_time}")
