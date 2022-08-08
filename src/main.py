@@ -5,26 +5,49 @@ from core.slack import SlackAPI
 from core.config import set_env
 from crawler.crawler import crawler_run
 
-# 환경변수 세팅
-set_env(["slack_token", "event_check_url"])
 
-# monitor
-# dict( url: str(변화감지된 url), msg: str(html) )
-msg_txt_list: list[dict] = crawler_run()
 
-# 변동 감지된 링크가 있다면
-if len(msg_txt_list) > 0:
+def send_slack_msgs(msg_txt_list: list[dict]):
+    '''
+    bot을 추가한 모든 채널에 message 보내는 최상위 함수
+    - standard_url.csv에 변동된 url이 감지되어야만 러닝
+    - msg_txt_list의 데이터 형태가 중요함
+    '''
+
     # slack 
     slack = SlackAPI(debug=True)
     target_channels = slack.get_channel_info()
 
-    # msg_txt_list - hook all
-    for msg_txt in msg_txt_list:
+    # msg_dict - # dict( url: str(변화감지된 url), img: str(url), msg: list[list] )
+    for msg_dict in msg_txt_list:
+
+        # 채널에 추가하고, 멤버로 초대를 해야만 message를 보낼 수 있다
         for target_ch in target_channels:
-            # 채널에 추가하고, 멤버로 초대를 해야만 message를 보낼 수 있다
             if target_ch['is_member']: 
-                slack.post_text_message(target_ch['id'], f"{msg_txt} to {target_ch['name']}")
+                # target_ch['name'] - ch name 알 수 있음
+                slack.post_text_message(target_ch['id'], msg_dict.get("img"), msg_dict.get("msg"))
+
+
+                # 훅 보낸 뒤에 보낸 로그 파일을 csv 파일로 만들어 두자 
 
 
 
-# 훅 보낸 뒤에 보낸 로그 파일을 csv 파일로 만들어 두자 
+def make_send_slack_log(ch_id, ch_name, msg):
+    '''
+    
+    '''
+
+
+
+if __name__ == "__main__":
+    # 환경변수 세팅
+    set_env(["slack_token", "event_check_url"])
+
+
+    # monitor
+    # dict( url: str(변화감지된 url), img: str(url), msg: list[list] )
+    msg_txt_list: list[dict] = crawler_run()
+
+    # 변동 감지된 링크가 있다면
+    if len(msg_txt_list) > 0:
+        send_slack_msgs(msg_txt_list)

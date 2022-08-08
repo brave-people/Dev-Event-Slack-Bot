@@ -36,20 +36,57 @@ class SlackAPI:
         return channels
 
 
-    def post_text_message(self, channel_id: str, msg: str) -> SlackResponse:
+    def post_text_message(self, channel_id: str, msg_img: str, msg_block_list: list[list]) -> SlackResponse:
         """
         슬랙 봇 추가한 channel_id 로 해당 msg 전송하기
+        - msg가 list[list]로 넘어옴, crawler > data_detail_parsing 함수 확인
         """
+
+        # payload - list
+        result_blocks = list()
+        
+        # 우선 이미지 세팅부터과 사전세팅
+        result_blocks.append({
+			"type": "image",
+			"image_url": msg_img,
+			"alt_text": "용감한 친구들 - 주간 Dev Event"
+		})
+        result_blocks.append({
+			"type": "divider"
+		})
+
+        # list[list] 로 넘어온 text, slack 템플릿에 맞추기
+        for msg_block in msg_block_list:
+            result_blocks.append(self.make_text_message_block(msg_block))
+
         try:
             response = self.client.chat_postMessage(
                 channel=channel_id,
-                text=msg
+                blocks=result_blocks
             )
             return response
         except SlackApiError as e:
             # You will get a SlackApiError if "ok" is False
             assert e.response["error"]    # str like 'invalid_auth', 'channel_not_found'
 
+
+    def make_text_message_block(self, msg_block: list):
+        return {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f" *{msg_block[0]}* \n {msg_block[2]} \n {msg_block[3]}"
+            },
+            "accessory": {
+                "type": "button",
+                "text": {
+                    "type": "plain_text",
+                    "text": "확인 하러 가기",
+                    "emoji": True
+                },
+                "url": msg_block[1]
+            }
+        }
 
     # ================================================================= #
     # 이하 Optional 한 method 들 

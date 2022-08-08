@@ -15,7 +15,7 @@ class Crawler:
 
     def __init__(self) -> None:
         self.STANDARD_GIT_URL = "https://github.com"
-        self.FILE_PATH = f'{os.environ.get("base_dir")}/data/csv/standard_url.csv'
+        self.FILE_PATH = f'{os.environ.get("base_dir")}/data/standard_url.csv'
 
 
     def get_html(self, target_url=None):
@@ -76,17 +76,34 @@ class Crawler:
             except AttributeError:
                 continue # 쓸모없는 div 경우
 
-        return list(set(issue_url_list)) # 중복 제거
+        return_issue_url_list = list(set(issue_url_list)) # 중복 제거
+        return_issue_url_list.sort(reverse=True)
+        return return_issue_url_list 
 
 
-    def data_detail_parsing(self, target_url) -> str:
+    def data_detail_parsing(self, target_url):
         """
         변화감지로 잡힌 issue의 url에서 detail한 정보를 parsing해 옴, hook 보낼 정보들임
         """
         html = self.get_html(target_url=target_url)
         main_table = html.find('table')
-        txt_tag = main_table.select("tbody > tr:nth-child(1) > td > p:nth-child(3)")
-        return str(txt_tag)
+        txt_image = main_table.select_one("tbody > tr:nth-child(1) > td > div > a").find('img').get('src')
+        txt_tag = main_table.select_one("tbody > tr:nth-child(1) > td > p:nth-child(3)")
+        a_tag_list = txt_tag.find_all('a')
+        
+        # text 재조합하기
+        return_txt_list = list()
+        temp = ""
+        for i, txt in enumerate(txt_tag.get_text().strip().split("\n")):
+            # text 덩어리 3개씩 조합됨, 0일때 tag가 달림
+            if i % 3 == 0:
+                return_txt_list.append(temp)
+                temp = list()
+                temp.append(txt)
+                temp.append(a_tag_list[int(i / 3)].get('href'))
+            else:
+                temp.append(txt)
+        return txt_image, return_txt_list[1:]
 
 
     def data_compare(self) -> list[dict]:
@@ -106,16 +123,17 @@ class Crawler:
 
         # step3. 두 list에서 다른 값 가져오기 (다른 url 가져오기), 여러개일 수 있어서 list로 계속 취급
         result_diff_list = list(set(new_issue_url_list) - set(standard_data_list))
-        # print(f"result_diff_list: {result_diff_list}")
 
         # step4. 다른 url을 타고 들어가서 상세 정보를 한 번 더 파싱해오기
         if len(result_diff_list) > 0:
             # hook 보낼 정보 생성
             for result in result_diff_list:
                 target_url = f"{self.STANDARD_GIT_URL}{result}"
+                hook_image, hook_msg = self.data_detail_parsing(target_url)
                 return_hook_data.append(dict(
                     url=target_url,
-                    msg=self.data_detail_parsing(target_url)
+                    img=hook_image,
+                    msg=hook_msg
                 ))
 
             # 해당 url 로 update
