@@ -7,6 +7,7 @@ from time import perf_counter_ns, process_time_ns
 from logger import log, process_start_log
 from core.slack import SlackAPI
 from core.config import set_env
+from core.exception_handler import exception_handler
 from crawler.crawler import crawler_run
 
 
@@ -42,14 +43,18 @@ if __name__ == "__main__":
     set_env(["slack_token", "event_check_url"])
 
     # monitor
-    # dict( url: str(변화감지된 url), img: str(url), msg: list[list] )
-    msg_txt_list: list[dict] = crawler_run()
+    try:
+        # dict( url: str(변화감지된 url), img: str(url), msg: list[list] )
+        msg_txt_list: list[dict] = crawler_run()
 
-    # 변동 감지된 링크가 있다면
-    if len(msg_txt_list) > 0:
-        send_slack_msgs(msg_txt_list)
+        # 변동 감지된 링크가 있다면
+        if len(msg_txt_list) > 0:
+            send_slack_msgs(msg_txt_list)
 
-    end_time = perf_counter_ns()
-    process_end_time = process_time_ns()
+        end_time = perf_counter_ns()
+        process_end_time = process_time_ns()
+    except Exception as exc:
+        exception_handler(exc)
+        
     log(f"{process_name} total run time: {end_time - start_time} ms {(end_time - start_time) * 0.000000001} second")
     log(f"{process_name} process run time: {end_time - start_time} ms {(end_time - start_time) * 0.000000001} second")

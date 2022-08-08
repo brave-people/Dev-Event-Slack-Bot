@@ -63,22 +63,26 @@ class Crawler:
         DOM 중 타겟 DOM의 데이터만 가져오기, 여기서는 issue의 url만 가져올 것
         """
         html = self.get_html()
-        main_div = html.find("div", {"id": "repo-content-pjax-container"})
-        issue_lists = main_div.find("div", {"class": "js-navigation-container js-active-navigation-container"}).find_all('div')
 
-        # issue url list 
-        issue_url_list = list()
-        for issue in issue_lists:
-            try:
-                href = issue.find('a').get('href')
-                if "q" in str(href): continue # 쓸모 없는 issue
-                else: issue_url_list.append(issue.find('a').get('href'))
-            except AttributeError:
-                continue # 쓸모없는 div 경우
+        try:
+            main_div = html.find("div", {"id": "repo-content-pjax-container"})
+            issue_lists = main_div.find("div", {"class": "js-navigation-container js-active-navigation-container"}).find_all('div')
 
-        return_issue_url_list = list(set(issue_url_list)) # 중복 제거
-        return_issue_url_list.sort(reverse=True)
-        return return_issue_url_list 
+            # issue url list 
+            issue_url_list = list()
+            for issue in issue_lists:
+                try:
+                    href = issue.find('a').get('href')
+                    if "q" in str(href): continue # 쓸모 없는 issue
+                    else: issue_url_list.append(issue.find('a').get('href'))
+                except AttributeError:
+                    continue # 쓸모없는 div 경우
+
+            return_issue_url_list = list(set(issue_url_list)) # 중복 제거
+            return_issue_url_list.sort(reverse=True)
+            return return_issue_url_list 
+        except Exception as exc:
+            return exception_handler(exc)
 
 
     def data_detail_parsing(self, target_url):
@@ -86,24 +90,28 @@ class Crawler:
         변화감지로 잡힌 issue의 url에서 detail한 정보를 parsing해 옴, hook 보낼 정보들임
         """
         html = self.get_html(target_url=target_url)
-        main_table = html.find('table')
-        txt_image = main_table.select_one("tbody > tr:nth-child(1) > td > div > a").find('img').get('src')
-        txt_tag = main_table.select_one("tbody > tr:nth-child(1) > td > p:nth-child(3)")
-        a_tag_list = txt_tag.find_all('a')
-        
-        # text 재조합하기
-        return_txt_list = list()
-        temp = ""
-        for i, txt in enumerate(txt_tag.get_text().strip().split("\n")):
-            # text 덩어리 3개씩 조합됨, 0일때 tag가 달림
-            if i % 3 == 0:
-                return_txt_list.append(temp)
-                temp = list()
-                temp.append(txt)
-                temp.append(a_tag_list[int(i / 3)].get('href'))
-            else:
-                temp.append(txt)
-        return txt_image, return_txt_list[1:]
+
+        try:
+            main_table = html.find('table')
+            txt_image = main_table.select_one("tbody > tr:nth-child(1) > td > div > a").find('img').get('src')
+            txt_tag = main_table.select_one("tbody > tr:nth-child(1) > td > p:nth-child(3)")
+            a_tag_list = txt_tag.find_all('a')
+            
+            # text 재조합하기
+            return_txt_list = list()
+            temp = ""
+            for i, txt in enumerate(txt_tag.get_text().strip().split("\n")):
+                # text 덩어리 3개씩 조합됨, 0일때 tag가 달림
+                if i % 3 == 0:
+                    return_txt_list.append(temp)
+                    temp = list()
+                    temp.append(txt)
+                    temp.append(a_tag_list[int(i / 3)].get('href'))
+                else:
+                    temp.append(txt)
+            return txt_image, return_txt_list[1:]
+        except Exception as exc:
+            return exception_handler(exc)
 
 
     def data_compare(self) -> list[dict]:
