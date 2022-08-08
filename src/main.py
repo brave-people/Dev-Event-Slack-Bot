@@ -40,7 +40,7 @@ if __name__ == "__main__":
     process_start_log(process_name)
 
     # 환경변수 세팅
-    set_env(["slack_token", "event_check_url"])
+    # set_env(["slack_token", "event_check_url"])
 
     # monitor
     try:
@@ -55,6 +55,6 @@ if __name__ == "__main__":
         process_end_time = process_time_ns()
     except Exception as exc:
         exception_handler(exc)
-        
+
     log(f"{process_name} total run time: {end_time - start_time} ms {(end_time - start_time) * 0.000000001} second")
     log(f"{process_name} process run time: {end_time - start_time} ms {(end_time - start_time) * 0.000000001} second")
