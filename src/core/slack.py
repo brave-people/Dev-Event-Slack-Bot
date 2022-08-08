@@ -52,6 +52,13 @@ class SlackAPI:
 			"alt_text": "용감한 친구들 - 주간 Dev Event"
 		})
         result_blocks.append({
+			"type": "section",
+			"text": {
+				"type": "mrkdwn",
+				"text": "Dev-Event-Subscribe처럼 더 많은 행사를 보고 싶다면? *<https://github.com/brave-people/Dev-Event|Github Dev Event>* 로 오세요!"
+			}
+		})
+        result_blocks.append({
 			"type": "divider"
 		})
 
@@ -62,7 +69,8 @@ class SlackAPI:
         try:
             response = self.client.chat_postMessage(
                 channel=channel_id,
-                blocks=result_blocks
+                blocks=result_blocks,
+                text="Dev-Event-Subscribe처럼 더 많은 행사를 보고 싶다면? Github Dev Event 로 오세요!"
             )
             return response
         except SlackApiError as e:

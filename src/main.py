@@ -10,7 +10,6 @@ from core.config import set_env
 from crawler.crawler import crawler_run
 
 
-
 def send_slack_msgs(msg_txt_list: list[dict]):
     '''
     bot을 추가한 모든 채널에 message 보내는 최상위 함수
@@ -28,9 +27,8 @@ def send_slack_msgs(msg_txt_list: list[dict]):
         # 채널에 추가하고, 멤버로 초대를 해야만 message를 보낼 수 있다
         for target_ch in target_channels:
             if target_ch['is_member']: 
-                # target_ch['name'] - ch name 알 수 있음
+                log(f"msg hook tried: {target_ch['id']}, {target_ch['name']}, {msg_dict.get('url')}")
                 slack.post_text_message(target_ch['id'], msg_dict.get("img"), msg_dict.get("msg"))
-                log(f"msg hooked: {target_ch['id']}, {target_ch['name']}, {msg_dict.get('msg')}")
 
 
 
@@ -43,7 +41,6 @@ if __name__ == "__main__":
     # 환경변수 세팅
     set_env(["slack_token", "event_check_url"])
 
-
     # monitor
     # dict( url: str(변화감지된 url), img: str(url), msg: list[list] )
     msg_txt_list: list[dict] = crawler_run()
@@ -54,5 +51,5 @@ if __name__ == "__main__":
 
     end_time = perf_counter_ns()
     process_end_time = process_time_ns()
-    log(f"{process_name} total run time: {end_time - start_time}")
-    log(f"{process_name} process run time: {process_end_time - process_start_time}")
+    log(f"{process_name} total run time: {end_time - start_time} ms {(end_time - start_time) * 0.000000001} second")
+    log(f"{process_name} process run time: {end_time - start_time} ms {(end_time - start_time) * 0.000000001} second")
