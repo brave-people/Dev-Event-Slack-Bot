@@ -15,7 +15,7 @@ class Crawler:
 
     def __init__(self) -> None:
         self.STANDARD_GIT_URL = "https://github.com"
-        self.FILE_PATH = f'{os.environ.get("base_dir")}/data/standard_url.csv'
+        self.FILE_PATH = f'{os.environ.get("base_dir", ".")}/data/standard_url.csv'
 
 
     def get_html(self, target_url=None):
