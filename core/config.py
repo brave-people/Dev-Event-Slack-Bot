@@ -27,7 +27,7 @@ def set_env(key_list: List[str]) -> None:
     """
     secret file 기반으로 OS 환경 변수 설정
     """
-    BASE_DIR = Path(__file__).resolve().parent.parent.parent
+    BASE_DIR = Path(__file__).resolve().parent.parent
     config = get_secret_file(BASE_DIR)
     for key in key_list: os.environ[key] = config[key]
 

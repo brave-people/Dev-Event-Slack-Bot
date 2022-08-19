@@ -2,10 +2,10 @@
 # path setting
 from os import path
 import sys
-sys.path.append(path.abspath('../..'))
+sys.path.append(path.abspath('..'))
 
 # custom lib
-from src.logger import log
+from logger import log
 
 
 # 모든 이벤트를 받아서 처리하는 exception handerl
