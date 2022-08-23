@@ -30,7 +30,7 @@ def send_slack_msgs(msg_txt_list: list[dict], repository: Repository):
             if target_ch['is_member']:
                 repository.log_data(
                     "hook_log",
-                    f"msg hook tried: {target_ch['id']}, {target_ch['name']}, {msg_dict.get('url')}"
+                    f"{target_ch['id']}, {target_ch['name']}, {msg_dict.get('url')}"
                 )
                 slack.post_text_message(
                     target_ch['id'], msg_dict.get("img"), msg_dict.get("msg")

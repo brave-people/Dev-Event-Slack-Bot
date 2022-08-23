@@ -25,6 +25,7 @@ class Repository():
         self.db = client["dev-event-slack-bot"]
         self.main_coll = self.db["standard-data"]
         self.log_coll = self.db["log-data"]
+        self.hook_log_coll = self.db["hook-log-data"]
 
     def get_standard_data(self) -> dict:
         '''
@@ -80,6 +81,16 @@ class Repository():
                     "created_at": now,
                 })
 
+            elif log_type == "hook_log":
+                # 채널 id, 채널 명, 후킹 그룹이 될 url
+                log_msg_list = log_msg.split(",")
+                self.hook_log_coll.insert_one({
+                    "log_type": log_type,
+                    "target_ch_id": log_msg_list[0].strip(),
+                    "target_ch_name": log_msg_list[1].strip(),
+                    "hook_group": log_msg_list[2].strip(),
+                    "created_at": now,
+                })
             else:
                 self.log_coll.insert_one({
                     "log_type": log_type,
