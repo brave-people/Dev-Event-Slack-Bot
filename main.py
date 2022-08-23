@@ -42,7 +42,7 @@ if __name__ == "__main__":
     process_start_time = process_time_ns()
 
     # 환경변수 세팅 - 배포 환경, 헤로쿠에서는 set_env 필요 X
-    set_env(["slack_token", "event_check_url", "mongodb_atlas_url"])
+    # set_env(["slack_token", "event_check_url", "mongodb_atlas_url"])
 
     # DBMS object
     repository = Repository()
