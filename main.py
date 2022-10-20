@@ -69,5 +69,5 @@ if __name__ == "__main__":
     )
     repository.log_data(
         "run_log",
-        f"process run time: {end_time - start_time} ms {(end_time - start_time) * 0.000000001} second"
+        f"process run time: {process_end_time - process_start_time} ms {(process_end_time - process_start_time) * 0.000000001} second"
     )

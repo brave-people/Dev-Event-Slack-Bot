@@ -1,0 +1,22 @@
+{
+  "name": "Dev-event-slack-bot-oauth",
+  "version": "1.0.0",
+  "description": "slack-oauth for Dev-event-slack-bot",
+  "main": "index.js",
+  "repository": "https://github.com/brave-people/Dev-Event-Slack-Bot",
+  "author": "Nuung",
+  "license": "MIT",
+  "scripts": {
+    "dev": "nodemon --watch ./src/ ./www",
+    "start": "nodemon ./www",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@slack/web-api": "^6.7.2",
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2",
+    "mongoose": "^6.6.6",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.20"
+  }
+}
