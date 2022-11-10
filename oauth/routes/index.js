@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose'); // for mongoDB
 const router = express.Router();
+const { WebClient } = require('@slack/web-api');
+const client = new WebClient();
 
 // env value
 const env = require('dotenv').config(); //add .env file 
@@ -17,24 +19,15 @@ mongoose
     .catch((err) => console.error(err));
 
 
-/**
- * On this page you display the Add to SLACK button.The user can click it to login with Slack.
- */
 router.get('/auth/slack', async (_, res) => {
-    const scopes = 'calls:write,channels:read,chat:write,groups:read,im:read,mpim:read&;user_scope=&';
-    const redirectUrl = `https://${domainName}/auth/slack/callback`;
+    const botScopes = 'calls:write,chat:write,channels:read,groups:read,mpim:read,im:read';
+    const userScopes = '';
     const clientId = process.env.SLACK_CLIENT_ID;
-
-
-    // const oauthUrl = `https://slack.com/oauth/v2/authorize?scope=${scopes};&redirect_uri=${redirectUrl}&;client_id=${clientId}`;
-    const oauthUrl = `https://slack.com/oauth/v2/authorize?client_id=${clientId}&scope=calls:write,chat:write,channels:read,groups:read,mpim:read,im:read&user_scope=`;
+    const oauthUrl = `https://slack.com/oauth/v2/authorize?client_id=${clientId}&scope=${botScopes}&user_scope=${userScopes}`;
     return res.render('index', { oauthUrl });
 });
 
 
-/**
- * This is the callback page.
- */
 router.get('/auth/slack/callback', async (req, res) => {
     try {
         const response = await client.oauth.v2.access({
