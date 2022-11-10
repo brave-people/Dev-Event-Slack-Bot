@@ -30,8 +30,6 @@ router.get('/auth/slack', async (_, res) => {
 
 router.get('/auth/slack/callback', async (req, res) => {
     try {
-        console.log(req.query.code);
-
         const response = await client.oauth.v2.access({
             client_id: process.env.SLACK_CLIENT_ID,
             client_secret: process.env.SLACK_CLIENT_SECRET,
@@ -39,10 +37,6 @@ router.get('/auth/slack/callback', async (req, res) => {
         });
 
         console.dir(response);
-
-        const identity = await client.users.identity({
-            token: response.authed_user.access_token
-        });
 
         // At this point you can assume the user has logged in successfully with their account.
         return res.status(200).send(`<html><body><p>You have successfully logged in with your slack account! Here are the details:</p><p>Response: ${JSON.stringify(response)}</p><p>Identity: ${JSON.stringify(identity)}</p></body></html>`);
