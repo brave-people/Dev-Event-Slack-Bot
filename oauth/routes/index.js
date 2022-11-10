@@ -30,7 +30,7 @@ router.get('/auth/slack', async (_, res) => {
 
     // Invalid client_id parameter
     // const oauthUrl = `https://slack.com/oauth/v2/authorize?client_id=${slackClientId}&user_scope=${scopes}&redirect_uri=${redirectUrl}`;
-    const oauthUrl = "https://slack.com/oauth/v2/authorize?client_id=2844308222017.3909658800162&scope=calls:write,chat:write,channels:read,groups:read,mpim:read,im:read&user_scope=chat:write,im:read,identity.basic,calls:write,channels:read";
+    const oauthUrl = "https://slack.com/oauth/v2/authorize?client_id=2844308222017.3909658800162&scope=calls:write,chat:write,channels:read,groups:read,mpim:read,im:read&user_scope=identity.basic";
     return res.render('index', { oauthUrl });
 });
 
