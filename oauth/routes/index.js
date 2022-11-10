@@ -5,7 +5,6 @@ const router = express.Router();
 // env value
 const env = require('dotenv').config(); //add .env file 
 const domainName = "dev-event-slack-bot.kro.kr"
-const slackClientId = process.env.SLACK_CLIENT_ID
 
 // db connect
 mongoose
@@ -22,10 +21,10 @@ mongoose
  * On this page you display the Add to SLACK button.The user can click it to login with Slack.
  */
 router.get('/auth/slack', async (_, res) => {
-    const scopes = 'calls:write,channels:read,chat:write,groups:read,im:read,mpim:read;&user_scope=';
+    const scopes = 'calls:write,channels:read,chat:write,groups:read,im:read,mpim:read&;user_scope=&';
     const redirectUrl = `https://${domainName}/auth/slack/callback`;
     const clientId = process.env.SLACK_CLIENT_ID;
-    const oauthUrl = `https://slack.com/oauth/v2/authorize?scope=${scopes};&redirect_uri=${redirectUrl};&client_id=${clientId}`;
+    const oauthUrl = `https://slack.com/oauth/v2/authorize?scope=${scopes};&redirect_uri=${redirectUrl}&;client_id=${clientId}`;
     return res.render('index', { oauthUrl });
 });
 
