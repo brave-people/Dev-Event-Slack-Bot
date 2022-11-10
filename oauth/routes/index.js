@@ -22,15 +22,10 @@ mongoose
  * On this page you display the Add to SLACK button.The user can click it to login with Slack.
  */
 router.get('/auth/slack', async (_, res) => {
-    const scopes = 'identity.basic,identity.email';
+    const scopes = 'calls:write,channels:read,chat:write,groups:read,im:read,mpim:read&amp;user_scope=&amp';
     const redirectUrl = `https://${domainName}/auth/slack/callback`;
-
-    //Here you build the url. You could also copy and paste it from the Manage Distribution page of your app.
-    // https://slack.com/oauth/v2/authorize?client_id=2844308222017.3909658800162&scope=calls:write,chat:write,channels:read,groups:read,mpim:read,im:read&user_scope=chat:write,im:read,identity.basic,calls:write,channels:read
-
-    // Invalid client_id parameter
-    // const oauthUrl = `https://slack.com/oauth/v2/authorize?client_id=${slackClientId}&user_scope=${scopes}&redirect_uri=${redirectUrl}`;
-    const oauthUrl = "https://slack.com/oauth/v2/authorize?scope=&amp;user_scope=&amp;redirect_uri=https%3A%2F%2Fdev-event-slack-bot.kro.kr%2Fauth%2Fslack%2Fcallback&amp;client_id=2844308222017.3909658800162";
+    const clientId = `2844308222017.3909658800162`;
+    const oauthUrl = `https://slack.com/oauth/v2/authorize?scope=${scopes};redirect_uri=${redirectUrl};client_id=${clientId}`;
     return res.render('index', { oauthUrl });
 });
 
