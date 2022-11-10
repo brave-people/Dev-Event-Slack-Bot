@@ -30,11 +30,15 @@ router.get('/auth/slack', async (_, res) => {
 
 router.get('/auth/slack/callback', async (req, res) => {
     try {
+        console.log(req.query.code);
+
         const response = await client.oauth.v2.access({
             client_id: process.env.SLACK_CLIENT_ID,
             client_secret: process.env.SLACK_CLIENT_SECRET,
             code: req.query.code,
         });
+
+        console.dir(response);
 
         const identity = await client.users.identity({
             token: response.authed_user.access_token
