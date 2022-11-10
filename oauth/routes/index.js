@@ -39,7 +39,7 @@ router.get('/auth/slack/callback', async (req, res) => {
         console.dir(response);
 
         // At this point you can assume the user has logged in successfully with their account.
-        return res.status(200).send(`<html><body><p>You have successfully logged in with your slack account! Here are the details:</p><p>Response: ${JSON.stringify(response)}</p><p>Identity: ${JSON.stringify(identity)}</p></body></html>`);
+        return res.status(200).send(`<html><body><p>You have successfully logged in with your slack account! Here are the details:</p><p>Response: ${JSON.stringify(response)}</p></body></html>`);
     } catch (eek) {
         console.log(eek);
         return res.status(500).send(`<html><body><p>Something went wrong!</p><p>${JSON.stringify(eek)}</p>`);
