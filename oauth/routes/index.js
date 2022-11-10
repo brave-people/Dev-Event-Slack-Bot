@@ -24,7 +24,10 @@ router.get('/auth/slack', async (_, res) => {
     const scopes = 'calls:write,channels:read,chat:write,groups:read,im:read,mpim:read&;user_scope=&';
     const redirectUrl = `https://${domainName}/auth/slack/callback`;
     const clientId = process.env.SLACK_CLIENT_ID;
-    const oauthUrl = `https://slack.com/oauth/v2/authorize?scope=${scopes};&redirect_uri=${redirectUrl}&;client_id=${clientId}`;
+
+
+    // const oauthUrl = `https://slack.com/oauth/v2/authorize?scope=${scopes};&redirect_uri=${redirectUrl}&;client_id=${clientId}`;
+    const oauthUrl = `https://slack.com/oauth/v2/authorize?client_id=${clientId}&scope=calls:write,chat:write,channels:read,groups:read,mpim:read,im:read&user_scope=`;
     return res.render('index', { oauthUrl });
 });
 
