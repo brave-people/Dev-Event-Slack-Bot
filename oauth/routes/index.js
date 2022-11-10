@@ -23,7 +23,7 @@ mongoose
  */
 router.get('/auth/slack', async (_, res) => {
     const scopes = 'calls:write,channels:read,chat:write,groups:read,im:read,mpim:read&amp;user_scope=&amp';
-    const redirectUrl = `https://${domainName}/auth/slack/callback`;
+    const redirectUrl = `https://${domainName}/auth/slack/callback&amp`;
     const clientId = process.env.SLACK_CLIENT_ID;
     const oauthUrl = `https://slack.com/oauth/v2/authorize?scope=${scopes};redirect_uri=${redirectUrl};client_id=${clientId}`;
     return res.render('index', { oauthUrl });
