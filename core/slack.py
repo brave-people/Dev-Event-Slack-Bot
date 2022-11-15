@@ -32,6 +32,7 @@ class SlackAPI:
         result = self.client.conversations_list() # slack bot에 대한 정보 나열
         
         # 채널 정보 딕셔너리 리스트
+        print(result)
         channels = result.data['channels'] # 그 중 slack bot이 추가된 channel에 대한 리스트업
         return channels
 
