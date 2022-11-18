@@ -1,6 +1,7 @@
 
 # custom
 secrets.json
+**/nginx-certbot/**
 
 
 # Created by https://www.toptal.com/developers/gitignore/api/macos,python,venv,node,visualstudiocode
